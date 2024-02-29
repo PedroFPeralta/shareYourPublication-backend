@@ -1,18 +1,18 @@
 package pt.peralta.shareYourDemo.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import jakarta.persistence.*;
+import lombok.*;
 
 @Entity
 @Table(name = "publication")
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
+@EqualsAndHashCode(of = "id")
 public class Publication {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String title;
     private String description;

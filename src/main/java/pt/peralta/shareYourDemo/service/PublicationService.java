@@ -24,7 +24,8 @@ public class PublicationService {
 
     public Publication create(PublicationDTO publicationDTO){
         Publication publication = new Publication(publicationDTO);
-        return repository.save(publication);
+        repository.save(publication);
+        return publication;
     }
 
     public Publication update(Long id, PublicationDTO publicationDTO) throws Exception {

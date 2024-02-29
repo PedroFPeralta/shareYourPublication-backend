@@ -32,13 +32,13 @@ public class PublicationController {
         return ResponseEntity.status(HttpStatus.CREATED).body(service.create(publicationDTO));
     }
 
-    @PutMapping("/:id")
-    public ResponseEntity<Publication> update(@PathParam("id") Long id, @RequestBody PublicationDTO publicationDTO) throws Exception {
+    @PutMapping("/{id}")
+    public ResponseEntity<Publication> update(@PathVariable("id") Long id, @RequestBody PublicationDTO publicationDTO) throws Exception {
         return ResponseEntity.status(HttpStatus.OK).body(service.update(id,publicationDTO));
     }
 
-    @DeleteMapping("/:id")
-    public ResponseEntity<Publication> delete(@PathParam("id") Long id) throws Exception {
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Publication> delete(@PathVariable("id") Long id) throws Exception {
         return ResponseEntity.status(HttpStatus.OK).body(service.delete(id));
     }
 
