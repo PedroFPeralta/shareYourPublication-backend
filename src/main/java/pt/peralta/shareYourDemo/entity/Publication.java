@@ -16,4 +16,9 @@ public class Publication {
     private Long id;
     private String title;
     private String description;
+
+    public Publication(PublicationDTO publicationDTO) {
+        this.title = publicationDTO.title();
+        this.description = publicationDTO.description();
+    }
 }
