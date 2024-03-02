@@ -2,6 +2,7 @@ package pt.peralta.shareYourDemo.controller;
 
 import org.antlr.v4.runtime.Token;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -43,7 +44,7 @@ public class AuthenticationController {
 
     @PostMapping("/register")
     public ResponseEntity register(@RequestBody RegisterDTO registerDTO){
-        if (this.userRepository.findByLogin(registerDTO.login()) != null) return ResponseEntity.badRequest().build();
+        if (this.userRepository.findByLogin(registerDTO.login()) != null) throw new DataIntegrityViolationException("User Alrdeady Exist");
 
         String encryptedPassword = new BCryptPasswordEncoder().encode(registerDTO.password());
         User newUser = new User(registerDTO.login(), encryptedPassword, registerDTO.role());

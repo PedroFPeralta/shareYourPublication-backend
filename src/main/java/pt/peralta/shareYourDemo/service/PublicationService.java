@@ -1,5 +1,6 @@
 package pt.peralta.shareYourDemo.service;
 
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -38,7 +39,7 @@ public class PublicationService {
         return publication;
     }
 
-    public Publication update(Long id, PublicationDTO publicationDTO) throws Exception {
+    public Publication update(Long id, PublicationDTO publicationDTO) {
         Publication publication = findById(id);
 
         if(!ownPublication(publication)) throw new SecurityException("Dont have authorization to Update this publication");
@@ -55,7 +56,7 @@ public class PublicationService {
         return user.getLogin().equals(publication.getCreatedBy());
     }
 
-    public Publication delete(Long id) throws Exception {
+    public Publication delete(Long id) {
         Publication publication = findById(id);
 
         if(!ownPublication(publication)) throw new SecurityException("Dont have delete to Update this publication");
@@ -65,8 +66,8 @@ public class PublicationService {
         return publication;
     }
 
-    public Publication findById(Long id) throws Exception {
-        Publication publication = repository.findById(id).orElseThrow(Exception::new);
+    public Publication findById(Long id) {
+        Publication publication = repository.findById(id).orElseThrow(EntityNotFoundException::new);
         return publication;
     }
 
