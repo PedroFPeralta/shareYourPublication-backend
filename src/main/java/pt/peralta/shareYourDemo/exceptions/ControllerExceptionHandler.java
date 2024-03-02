@@ -1,4 +1,4 @@
-package pt.peralta.shareYourDemo;
+package pt.peralta.shareYourDemo.exceptions;
 
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.dao.DataIntegrityViolationException;
