@@ -1,8 +1,6 @@
 package pt.peralta.shareYourDemo.controller;
 
-import jakarta.websocket.server.PathParam;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -33,12 +31,12 @@ public class PublicationController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Publication> update(@PathVariable("id") Long id, @RequestBody PublicationDTO publicationDTO) throws Exception {
+    public ResponseEntity<Publication> update(@PathVariable("id") Long id, @RequestBody PublicationDTO publicationDTO)   {
         return ResponseEntity.status(HttpStatus.OK).body(service.update(id,publicationDTO));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Publication> delete(@PathVariable("id") Long id) throws Exception {
+    public ResponseEntity<Publication> delete(@PathVariable("id") Long id)  {
         return ResponseEntity.status(HttpStatus.OK).body(service.delete(id));
     }
 

@@ -1,6 +1,5 @@
 package pt.peralta.shareYourDemo.infra.security;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -13,7 +12,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import pt.peralta.shareYourDemo.controller.AuthenticationController;
 
 
 @Configuration
@@ -34,8 +32,11 @@ public class SecurityConfigurations {
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers(HttpMethod.POST, "/auth/login").permitAll()
                         .requestMatchers(HttpMethod.POST, "/auth/register").permitAll()
+//                        .requestMatchers(HttpMethod.GET, "/publications").permitAll()
                         .requestMatchers(HttpMethod.POST, "/publications").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.GET).permitAll()
                         .anyRequest().authenticated()
+
                 )
                 .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
@@ -50,7 +51,7 @@ public class SecurityConfigurations {
     /**
      * Serve para dizer como é que o Security vai encriptar a password
      *
-     * @return
+     * @return Password hash
      */
     @Bean
     public PasswordEncoder passwordEncoder(){
