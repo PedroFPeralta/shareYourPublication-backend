@@ -2,10 +2,13 @@ package pt.peralta.shareYourDemo.service;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import pt.peralta.shareYourDemo.entity.Publication;
 import pt.peralta.shareYourDemo.entity.PublicationDTO;
+import pt.peralta.shareYourDemo.entity.user.User;
 import pt.peralta.shareYourDemo.repository.PublicationRepository;
+import pt.peralta.shareYourDemo.repository.UserRepository;
 
 import java.util.List;
 
@@ -13,9 +16,11 @@ import java.util.List;
 public class PublicationService {
 
     private PublicationRepository repository;
+    private UserRepository userRepository;
 
-    public PublicationService(PublicationRepository repository) {
+    public PublicationService(PublicationRepository repository, UserRepository userRepository) {
         this.repository = repository;
+        this.userRepository = userRepository;
     }
 
     public List<Publication> listAll(){
@@ -24,6 +29,10 @@ public class PublicationService {
 
     public Publication create(PublicationDTO publicationDTO){
         Publication publication = new Publication(publicationDTO);
+
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        publication.setCreatedBy(user.getLogin());
+
         repository.save(publication);
         return publication;
     }
