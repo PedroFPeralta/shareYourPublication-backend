@@ -1,17 +1,15 @@
 package pt.peralta.shareYourDemo.service;
 
 import jakarta.persistence.EntityNotFoundException;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
-import pt.peralta.shareYourDemo.entity.Publication;
-import pt.peralta.shareYourDemo.entity.PublicationDTO;
+import pt.peralta.shareYourDemo.entity.publication.Publication;
+import pt.peralta.shareYourDemo.entity.publication.PublicationDTO;
 import pt.peralta.shareYourDemo.entity.user.User;
 import pt.peralta.shareYourDemo.repository.PublicationRepository;
 import pt.peralta.shareYourDemo.repository.UserRepository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -46,6 +44,7 @@ public class PublicationService {
 
         publication.setTitle(publicationDTO.title());
         publication.setDescription(publicationDTO.description());
+        publication.setRecordTimestamp(LocalDateTime.now());
 
         return repository.save(publication);
     }
@@ -54,6 +53,19 @@ public class PublicationService {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
         return user.getLogin().equals(publication.getCreatedBy());
+    }
+
+    public Publication updateAddPictures(Long id, List<String> pictures){
+        Publication publication = findById(id);
+
+        if(!ownPublication(publication)) throw new SecurityException("Dont have authorization to Update this publication");
+
+        pictures.forEach(picture -> publication.setPictures(publication.getPictures().concat(picture).concat(",")));
+        publication.setRecordTimestamp(LocalDateTime.now());
+
+        repository.save(publication);
+
+        return publication;
     }
 
     public Publication delete(Long id) {

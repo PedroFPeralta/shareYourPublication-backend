@@ -4,8 +4,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-import pt.peralta.shareYourDemo.entity.Publication;
-import pt.peralta.shareYourDemo.entity.PublicationDTO;
+import pt.peralta.shareYourDemo.entity.publication.Publication;
+import pt.peralta.shareYourDemo.entity.publication.PublicationDTO;
 import pt.peralta.shareYourDemo.service.PublicationService;
 
 import java.util.List;
@@ -38,6 +38,11 @@ public class PublicationController {
     @DeleteMapping("/{id}")
     public ResponseEntity<Publication> delete(@PathVariable("id") Long id)  {
         return ResponseEntity.status(HttpStatus.OK).body(service.delete(id));
+    }
+
+    @PutMapping("/{id}/addPicture")
+    public ResponseEntity<Publication> updateAddPicture(@PathVariable("id") Long id, @RequestBody List<String> pictures){
+        return ResponseEntity.status(HttpStatus.OK).body(service.updateAddPictures(id,pictures));
     }
 
 }
