@@ -1,22 +1,15 @@
 package pt.peralta.shareYourDemo.controller;
 
-import org.antlr.v4.runtime.Token;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-import pt.peralta.shareYourDemo.entity.user.AuthenticationDTO;
-import pt.peralta.shareYourDemo.entity.user.LoginResponseDTO;
-import pt.peralta.shareYourDemo.entity.user.RegisterDTO;
-import pt.peralta.shareYourDemo.entity.user.User;
+import org.springframework.web.bind.annotation.*;
+import pt.peralta.shareYourDemo.entity.user.*;
 import pt.peralta.shareYourDemo.infra.security.TokenService;
 import pt.peralta.shareYourDemo.repository.UserRepository;
+import pt.peralta.shareYourDemo.service.AuthorizationService;
 
 @RestController
 @RequestMapping("auth")
@@ -25,11 +18,13 @@ public class AuthenticationController {
     private AuthenticationManager authenticationManager;
     private UserRepository userRepository;
     private TokenService tokenService;
+    private AuthorizationService authorizationService;
 
-    public AuthenticationController(AuthenticationManager authenticationManager, UserRepository userRepository, TokenService tokenService) {
+    public AuthenticationController(AuthenticationManager authenticationManager, UserRepository userRepository, TokenService tokenService, AuthorizationService authorizationService) {
         this.authenticationManager = authenticationManager;
         this.userRepository = userRepository;
         this.tokenService = tokenService;
+        this.authorizationService = authorizationService;
     }
 
     @PostMapping("/login")
@@ -50,6 +45,13 @@ public class AuthenticationController {
         User newUser = new User(registerDTO.login(), encryptedPassword, registerDTO.role());
 
         this.userRepository.save(newUser);
+
+        return ResponseEntity.ok().build();
+    }
+
+    @PutMapping("/contact")
+    public ResponseEntity updateContact(@RequestBody ContactDTO contact){
+        this.authorizationService.updateUserContact(contact);
 
         return ResponseEntity.ok().build();
     }
