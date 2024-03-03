@@ -2,14 +2,19 @@ package pt.peralta.shareYourDemo.service;
 
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import pt.peralta.shareYourDemo.entity.publication.Publication;
 import pt.peralta.shareYourDemo.entity.publication.PublicationDTO;
+import pt.peralta.shareYourDemo.entity.publication.PublicationDetailsDTO;
 import pt.peralta.shareYourDemo.entity.user.User;
+import pt.peralta.shareYourDemo.entity.user.UserDTO;
 import pt.peralta.shareYourDemo.repository.PublicationRepository;
 import pt.peralta.shareYourDemo.repository.UserRepository;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @Service
@@ -23,8 +28,29 @@ public class PublicationService {
         this.userRepository = userRepository;
     }
 
-    public List<Publication> listAll(){
-        return repository.findAll() ;
+    public List<PublicationDetailsDTO> listAll(){
+        List<PublicationDetailsDTO> publicationList = new ArrayList<>();
+        repository.findAll().forEach(publication -> publicationList.add(
+                new PublicationDetailsDTO(
+                        publication.getTitle(),
+                        publication.getDescription(),
+                        publication.getTimestamp(),
+                        publication.getRecordTimestamp(),
+                        getPublicationUser(publication),
+                        publicationPicturesToList(publication)
+                )));
+
+        return publicationList;
+
+    }
+
+    private UserDTO getPublicationUser(Publication publication){
+        User user = (User) userRepository.findByLogin(publication.getCreatedBy());
+        return new UserDTO(user.getLogin(),user.getContact());
+    }
+
+    private List<String> publicationPicturesToList(Publication publication){
+        return Arrays.stream(publication.getPictures().split(",")).toList();
     }
 
     public Publication create(PublicationDTO publicationDTO){

@@ -6,6 +6,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import pt.peralta.shareYourDemo.entity.publication.Publication;
 import pt.peralta.shareYourDemo.entity.publication.PublicationDTO;
+import pt.peralta.shareYourDemo.entity.publication.PublicationDetailsDTO;
 import pt.peralta.shareYourDemo.service.PublicationService;
 
 import java.util.List;
@@ -21,7 +22,7 @@ public class PublicationController {
     }
 
     @GetMapping("/")
-    public ResponseEntity<List<Publication>> listAll(){
+    public ResponseEntity<List<PublicationDetailsDTO>> listAll(){
         return ResponseEntity.status(HttpStatus.OK).body(service.listAll());
     }
 
