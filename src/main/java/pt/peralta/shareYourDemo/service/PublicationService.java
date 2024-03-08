@@ -32,6 +32,7 @@ public class PublicationService {
         List<PublicationDetailsDTO> publicationList = new ArrayList<>();
         repository.findAll().forEach(publication -> publicationList.add(
                 new PublicationDetailsDTO(
+                        publication.getId(),
                         publication.getTitle(),
                         publication.getDescription(),
                         publication.getTimestamp(),
@@ -42,6 +43,20 @@ public class PublicationService {
 
         return publicationList;
 
+    }
+
+    public PublicationDetailsDTO getPublication(Long id){
+        Publication publication = repository.findById(id).orElseThrow(EntityNotFoundException::new);
+
+        return new PublicationDetailsDTO(
+                publication.getId(),
+                publication.getTitle(),
+                publication.getDescription(),
+                publication.getTimestamp(),
+                publication.getRecordTimestamp(),
+                getPublicationUser(publication),
+                publicationPicturesToList(publication)
+        );
     }
 
     private UserDTO getPublicationUser(Publication publication){

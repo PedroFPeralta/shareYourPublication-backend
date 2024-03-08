@@ -13,7 +13,7 @@ public class ControllerExceptionHandler {
 
     @ExceptionHandler(EntityNotFoundException.class)
     public ResponseEntity notFoundException(EntityNotFoundException exception){
-        ExceptionDTO exceptionDTO = new ExceptionDTO(exception.getMessage(), HttpStatus.NOT_FOUND.toString());
+        ExceptionDTO exceptionDTO = new ExceptionDTO("Não foi encontrado nenhum registo", HttpStatus.NOT_FOUND.toString());
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(exceptionDTO);
     }
 

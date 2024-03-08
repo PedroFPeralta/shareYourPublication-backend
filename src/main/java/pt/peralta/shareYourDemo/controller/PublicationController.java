@@ -26,6 +26,11 @@ public class PublicationController {
         return ResponseEntity.status(HttpStatus.OK).body(service.listAll());
     }
 
+    @GetMapping("/{id}")
+    ResponseEntity<PublicationDetailsDTO> getPublication(@PathVariable("id") Long id){
+        return ResponseEntity.status(HttpStatus.OK).body(service.getPublication(id));
+    }
+
     @PostMapping("/")
     public ResponseEntity<Publication> create(@RequestBody PublicationDTO publicationDTO){
         return ResponseEntity.status(HttpStatus.CREATED).body(service.create(publicationDTO));
