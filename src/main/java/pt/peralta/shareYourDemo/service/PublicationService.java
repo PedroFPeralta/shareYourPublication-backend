@@ -35,6 +35,7 @@ public class PublicationService {
                         publication.getId(),
                         publication.getTitle(),
                         publication.getDescription(),
+                        publication.getLocation(),
                         publication.getTimestamp(),
                         publication.getRecordTimestamp(),
                         getPublicationUser(publication),
@@ -52,6 +53,7 @@ public class PublicationService {
                 publication.getId(),
                 publication.getTitle(),
                 publication.getDescription(),
+                publication.getLocation(),
                 publication.getTimestamp(),
                 publication.getRecordTimestamp(),
                 getPublicationUser(publication),
@@ -65,6 +67,8 @@ public class PublicationService {
     }
 
     private List<String> publicationPicturesToList(Publication publication){
+        if (publication.getPictures().isEmpty())
+            return null;
         return Arrays.stream(publication.getPictures().split(",")).toList();
     }
 
