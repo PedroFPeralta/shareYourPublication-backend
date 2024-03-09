@@ -1,5 +1,7 @@
 package pt.peralta.shareYourDemo.controller;
 
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -22,8 +24,10 @@ public class PublicationController {
     }
 
     @GetMapping("/")
-    public ResponseEntity<List<PublicationDetailsDTO>> listAll(){
-        return ResponseEntity.status(HttpStatus.OK).body(service.listAll());
+    public ResponseEntity<List<PublicationDetailsDTO>> listAll(
+            @RequestParam(defaultValue = "1") int page) {
+
+        return ResponseEntity.status(HttpStatus.OK).body(service.listAll(page));
     }
 
     @GetMapping("/{id}")

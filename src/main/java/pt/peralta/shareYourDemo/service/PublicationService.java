@@ -1,8 +1,11 @@
 package pt.peralta.shareYourDemo.service;
 
 import jakarta.persistence.EntityNotFoundException;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import pt.peralta.shareYourDemo.entity.publication.Publication;
 import pt.peralta.shareYourDemo.entity.publication.PublicationDTO;
@@ -19,6 +22,8 @@ import java.util.List;
 
 @Service
 public class PublicationService {
+    @Value("${publication.page.size}")
+    int pageSize;
 
     private PublicationRepository repository;
     private UserRepository userRepository;
@@ -28,9 +33,13 @@ public class PublicationService {
         this.userRepository = userRepository;
     }
 
-    public List<PublicationDetailsDTO> listAll(){
+    public List<PublicationDetailsDTO> listAll(int pageNumber){
         List<PublicationDetailsDTO> publicationList = new ArrayList<>();
-        repository.findAll().forEach(publication -> publicationList.add(
+
+        Pageable pageable = PageRequest.of(pageNumber-1, pageSize);
+        Page<Publication> page = repository.findAll(pageable);
+
+        page.getContent().forEach(publication -> publicationList.add(
                 new PublicationDetailsDTO(
                         publication.getId(),
                         publication.getTitle(),
@@ -43,7 +52,6 @@ public class PublicationService {
                 )));
 
         return publicationList;
-
     }
 
     public PublicationDetailsDTO getPublication(Long id){

@@ -27,4 +27,10 @@ public class ControllerExceptionHandler {
         ExceptionDTO exceptionDTO = new ExceptionDTO(exception.getMessage(), HttpStatus.BAD_REQUEST.toString());
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(exceptionDTO);
     }
+
+    @ExceptionHandler(NoMorePublicationException.class)
+    public ResponseEntity noMorePublicationException(NoMorePublicationException exception){
+        ExceptionDTO exceptionDTO = new ExceptionDTO(exception.getMessage(), HttpStatus.NOT_FOUND.toString());
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(exceptionDTO);
+    }
 }
