@@ -61,4 +61,9 @@ public class PublicationController {
         return ResponseEntity.status(HttpStatus.OK).body(service.addReviewToPublication(id,reviewValue));
     }
 
+    @PostMapping("{id}/removeReview")
+    public ResponseEntity<Publication> removePublicationReview(@PathVariable("id") Long id) {
+        return ResponseEntity.status(HttpStatus.OK).body(service.removeReviewFromPublication(id));
+    }
+
 }

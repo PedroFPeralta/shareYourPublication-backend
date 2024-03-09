@@ -31,8 +31,8 @@ public class ControllerExceptionHandler {
 
     @ExceptionHandler(NoMorePublicationException.class)
     public ResponseEntity noMorePublicationException(NoMorePublicationException exception){
-        ExceptionDTO exceptionDTO = new ExceptionDTO(exception.getMessage(), HttpStatus.NOT_FOUND.toString());
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(exceptionDTO);
+        ExceptionDTO exceptionDTO = new ExceptionDTO(exception.getMessage(), HttpStatus.NO_CONTENT.toString());
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).body(exceptionDTO);
     }
 
     @ExceptionHandler(InvalidReviewValueException.class)
@@ -45,5 +45,11 @@ public class ControllerExceptionHandler {
     public ResponseEntity PublicationAlreadyVotedException(PublicationAlreadyVotedException exception){
         ExceptionDTO exceptionDTO = new ExceptionDTO(exception.getMessage(), HttpStatus.BAD_REQUEST.toString());
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(exceptionDTO);
+    }
+
+    @ExceptionHandler(PublicationReviewUserNotFoundException.class)
+    public ResponseEntity PublicationAlreadyVotedException(PublicationReviewUserNotFoundException exception){
+        ExceptionDTO exceptionDTO = new ExceptionDTO(exception.getMessage(), HttpStatus.NOT_FOUND.toString());
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(exceptionDTO);
     }
 }

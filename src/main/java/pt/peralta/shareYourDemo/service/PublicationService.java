@@ -7,15 +7,13 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
-import pt.peralta.shareYourDemo.entity.publication.Publication;
-import pt.peralta.shareYourDemo.entity.publication.PublicationDTO;
-import pt.peralta.shareYourDemo.entity.publication.PublicationDetailsDTO;
-import pt.peralta.shareYourDemo.entity.publication.ReviewDTO;
+import pt.peralta.shareYourDemo.entity.publication.*;
 import pt.peralta.shareYourDemo.entity.user.User;
 import pt.peralta.shareYourDemo.entity.user.UserDTO;
 import pt.peralta.shareYourDemo.exceptions.InvalidReviewValueException;
 import pt.peralta.shareYourDemo.exceptions.NoMorePublicationException;
 import pt.peralta.shareYourDemo.exceptions.PublicationAlreadyVotedException;
+import pt.peralta.shareYourDemo.exceptions.PublicationReviewUserNotFoundException;
 import pt.peralta.shareYourDemo.repository.PublicationRepository;
 import pt.peralta.shareYourDemo.repository.UserRepository;
 
@@ -154,12 +152,46 @@ public class PublicationService {
 
         Publication publication = findById(id);
 
+        if (!publication.getType().equals(PublicationType.OFFERING)) throw new InvalidReviewValueException("Is not possible to make a review in this publication type");
+
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         if (user == null) throw new SecurityException("You need to be logged to add a review");
 
         if (publication.getReviews().contains(user.getLogin())) throw new PublicationAlreadyVotedException();
 
         publication.setReviews(publication.getReviews().concat(String.valueOf(reviewValue)).concat("-").concat(user.getLogin()).concat(","));
+
+        repository.save(publication);
+
+        return publication;
+    }
+
+    public Publication removeReviewFromPublication(Long id) {
+        Publication publication = findById(id);
+
+        // Verifica se o usuário está logado
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if (user == null) {
+            throw new SecurityException("You need to be logged in to remove a review");
+        }
+
+        // Verifica se o usuário é o autor da review que está sendo removida
+        if (!publication.getReviews().contains("-" + user.getLogin())) {
+            throw new PublicationReviewUserNotFoundException("User has not reviewed this publication");
+        }
+
+        // Remove a review do usuário da string de reviews da publicação
+        String reviewToRemove = "-" + user.getLogin();
+        int startIndex = publication.getReviews().indexOf(reviewToRemove);
+        int endIndex = publication.getReviews().indexOf(",", startIndex);
+        if (endIndex == -1) {
+            endIndex = publication.getReviews().length();
+        }
+
+        String review = publication.getReviews().substring(startIndex-1, endIndex+1);
+        String updatedReviews = publication.getReviews().replace(review, "");
+
+        publication.setReviews(updatedReviews);
 
         repository.save(publication);
 
