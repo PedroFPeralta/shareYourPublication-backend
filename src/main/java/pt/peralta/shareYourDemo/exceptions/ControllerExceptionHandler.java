@@ -1,6 +1,7 @@
 package pt.peralta.shareYourDemo.exceptions;
 
 import jakarta.persistence.EntityNotFoundException;
+import org.hibernate.PropertyValueException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,7 +25,7 @@ public class ControllerExceptionHandler {
 
     @ExceptionHandler(DataIntegrityViolationException.class)
     public ResponseEntity duplicateUserException(DataIntegrityViolationException exception){
-        ExceptionDTO exceptionDTO = new ExceptionDTO(exception.getMessage(), HttpStatus.BAD_REQUEST.toString());
+        ExceptionDTO exceptionDTO = new ExceptionDTO("Erro na consistencia de dados -> Propriedade: "+((PropertyValueException)exception.getCause()).getPropertyName(), HttpStatus.BAD_REQUEST.toString());
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(exceptionDTO);
     }
 

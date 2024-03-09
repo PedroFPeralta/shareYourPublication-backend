@@ -10,6 +10,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
+import pt.peralta.shareYourDemo.exceptions.NoMorePublicationException;
 import pt.peralta.shareYourDemo.repository.UserRepository;
 
 import java.io.IOException;
@@ -32,7 +33,10 @@ public class SecurityFilter extends OncePerRequestFilter {
             var login = tokenService.validateToken(token);
             UserDetails user = userRepository.findByLogin(login);
 
-            var authentication = new UsernamePasswordAuthenticationToken(user,null,user.getAuthorities());
+            var authentication = new UsernamePasswordAuthenticationToken(user,null,null);
+            if (user != null)
+                authentication = new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
+
             SecurityContextHolder.getContext().setAuthentication(authentication);
         }
         filterChain.doFilter(request,response);

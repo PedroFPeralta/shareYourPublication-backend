@@ -29,6 +29,8 @@ public class Publication {
     private String pictures;
     @Column(nullable = false)
     private String location;
+    @Column(nullable = false)
+    private PublicationType type;
 
     public Publication(PublicationDTO publicationDTO) {
         this.title = publicationDTO.title();
@@ -37,5 +39,9 @@ public class Publication {
         this.recordTimestamp = this.timestamp;
         this.location = publicationDTO.location();
         this.pictures = "";
+        if (publicationDTO.type().equalsIgnoreCase(PublicationType.REQUESTING.toString()))
+            this.type = PublicationType.REQUESTING;
+        else if (publicationDTO.type().equalsIgnoreCase(PublicationType.OFFERING.toString()))
+            this.type = PublicationType.OFFERING;
     }
 }

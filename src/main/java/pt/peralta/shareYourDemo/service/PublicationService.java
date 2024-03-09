@@ -51,7 +51,8 @@ public class PublicationService {
                         publication.getTimestamp(),
                         publication.getRecordTimestamp(),
                         getPublicationUser(publication),
-                        publicationPicturesToList(publication)
+                        publicationPicturesToList(publication),
+                        publication.getType().toString()
                 )));
 
         return publicationList;
@@ -68,7 +69,8 @@ public class PublicationService {
                 publication.getTimestamp(),
                 publication.getRecordTimestamp(),
                 getPublicationUser(publication),
-                publicationPicturesToList(publication)
+                publicationPicturesToList(publication),
+                publication.getType().toString()
         );
     }
 
@@ -87,6 +89,8 @@ public class PublicationService {
         Publication publication = new Publication(publicationDTO);
 
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+
         publication.setCreatedBy(user.getLogin());
 
         repository.save(publication);
@@ -101,12 +105,15 @@ public class PublicationService {
         publication.setTitle(publicationDTO.title());
         publication.setDescription(publicationDTO.description());
         publication.setRecordTimestamp(LocalDateTime.now());
+        publication.setLocation(publicationDTO.location());
 
         return repository.save(publication);
     }
 
     private boolean ownPublication(Publication publication) {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        if (user == null) return false;
 
         return user.getLogin().equals(publication.getCreatedBy());
     }
@@ -127,7 +134,7 @@ public class PublicationService {
     public Publication delete(Long id) {
         Publication publication = findById(id);
 
-        if(!ownPublication(publication)) throw new SecurityException("Dont have delete to Update this publication");
+        if(!ownPublication(publication)) throw new SecurityException("Dont have authorization to delete this publication");
 
         repository.delete(publication);
 

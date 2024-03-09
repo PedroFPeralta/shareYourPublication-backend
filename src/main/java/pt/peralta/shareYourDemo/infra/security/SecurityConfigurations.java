@@ -33,7 +33,7 @@ public class SecurityConfigurations {
                         .requestMatchers(HttpMethod.POST, "/auth/login").permitAll()
                         .requestMatchers(HttpMethod.POST, "/auth/register").permitAll()
 //                        .requestMatchers(HttpMethod.GET, "/publications").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/publications").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.POST, "/publications/").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.GET).permitAll()
                         .anyRequest().authenticated()
 
