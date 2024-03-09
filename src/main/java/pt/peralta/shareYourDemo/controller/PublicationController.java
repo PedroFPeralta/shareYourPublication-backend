@@ -7,6 +7,8 @@ import org.springframework.web.bind.annotation.*;
 import pt.peralta.shareYourDemo.entity.publication.Publication;
 import pt.peralta.shareYourDemo.entity.publication.PublicationDTO;
 import pt.peralta.shareYourDemo.entity.publication.PublicationDetailsDTO;
+import pt.peralta.shareYourDemo.entity.publication.ReviewDTO;
+import pt.peralta.shareYourDemo.exceptions.InvalidReviewValueException;
 import pt.peralta.shareYourDemo.exceptions.NoMorePublicationException;
 import pt.peralta.shareYourDemo.service.PublicationService;
 
@@ -52,6 +54,11 @@ public class PublicationController {
     @PutMapping("/{id}/addPicture")
     public ResponseEntity<Publication> updateAddPicture(@PathVariable("id") Long id, @RequestBody List<String> pictures){
         return ResponseEntity.status(HttpStatus.OK).body(service.updateAddPictures(id,pictures));
+    }
+
+    @PostMapping("{id}/addReview")
+    public ResponseEntity<Publication> addPublicationReview(@PathVariable("id") Long id, @RequestBody ReviewDTO reviewValue) {
+        return ResponseEntity.status(HttpStatus.OK).body(service.addReviewToPublication(id,reviewValue));
     }
 
 }

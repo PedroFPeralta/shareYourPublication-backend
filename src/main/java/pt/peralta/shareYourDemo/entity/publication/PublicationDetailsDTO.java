@@ -5,5 +5,5 @@ import pt.peralta.shareYourDemo.entity.user.UserDTO;
 import java.time.LocalDateTime;
 import java.util.List;
 
-public record PublicationDetailsDTO(Long id, String title, String description, String location, LocalDateTime timestamp, LocalDateTime recordTimestamp, UserDTO createdBy, List<String> pictures, String type) {
+public record PublicationDetailsDTO(Long id, String title, String description, String location, LocalDateTime timestamp, LocalDateTime recordTimestamp, UserDTO createdBy, List<String> pictures, String type, Double reviews) {
 }

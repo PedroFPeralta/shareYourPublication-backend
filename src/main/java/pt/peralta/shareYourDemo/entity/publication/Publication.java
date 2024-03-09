@@ -31,6 +31,8 @@ public class Publication {
     private String location;
     @Column(nullable = false)
     private PublicationType type;
+    //Will be a String with reviews with scale [0;5] separeted by ','
+    private String reviews;
 
     public Publication(PublicationDTO publicationDTO) {
         this.title = publicationDTO.title();
@@ -43,5 +45,6 @@ public class Publication {
             this.type = PublicationType.REQUESTING;
         else if (publicationDTO.type().equalsIgnoreCase(PublicationType.OFFERING.toString()))
             this.type = PublicationType.OFFERING;
+        this.reviews = "";
     }
 }
