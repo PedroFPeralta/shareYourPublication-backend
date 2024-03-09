@@ -12,6 +12,7 @@ import pt.peralta.shareYourDemo.entity.publication.PublicationDTO;
 import pt.peralta.shareYourDemo.entity.publication.PublicationDetailsDTO;
 import pt.peralta.shareYourDemo.entity.user.User;
 import pt.peralta.shareYourDemo.entity.user.UserDTO;
+import pt.peralta.shareYourDemo.exceptions.NoMorePublicationException;
 import pt.peralta.shareYourDemo.repository.PublicationRepository;
 import pt.peralta.shareYourDemo.repository.UserRepository;
 
@@ -33,11 +34,13 @@ public class PublicationService {
         this.userRepository = userRepository;
     }
 
-    public List<PublicationDetailsDTO> listAll(int pageNumber){
+    public List<PublicationDetailsDTO> listAll(int pageNumber) throws NoMorePublicationException {
         List<PublicationDetailsDTO> publicationList = new ArrayList<>();
 
         Pageable pageable = PageRequest.of(pageNumber-1, pageSize);
         Page<Publication> page = repository.findAll(pageable);
+
+        if (page.getContent().size()==0) throw new NoMorePublicationException("Não existem mais publicações");
 
         page.getContent().forEach(publication -> publicationList.add(
                 new PublicationDetailsDTO(

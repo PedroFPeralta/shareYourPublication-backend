@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import pt.peralta.shareYourDemo.entity.publication.Publication;
 import pt.peralta.shareYourDemo.entity.publication.PublicationDTO;
 import pt.peralta.shareYourDemo.entity.publication.PublicationDetailsDTO;
+import pt.peralta.shareYourDemo.exceptions.NoMorePublicationException;
 import pt.peralta.shareYourDemo.service.PublicationService;
 
 import java.util.List;
@@ -25,7 +26,7 @@ public class PublicationController {
 
     @GetMapping("/")
     public ResponseEntity<List<PublicationDetailsDTO>> listAll(
-            @RequestParam(defaultValue = "1") int page) {
+            @RequestParam(defaultValue = "1") int page) throws NoMorePublicationException {
 
         return ResponseEntity.status(HttpStatus.OK).body(service.listAll(page));
     }
